@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class= "form form-control ">
+            <h3 class="col-12 text-center">
+                Manage Work Hours
+            </h3>
+        <form class="form text-center" action="{% url 'manager:work_hour' %}" method="post">
+            {% csrf_token %}
+            <div class="form-control">
+                <label for="exampleFormControlSelect2"> Select Date</label>
+                <input type="date" id="exampleFormControlSelect2" class="form-control" name="date">
+            </div>
+            <hr>
+             <div class="form-group">
+                <label for="exampleFormControlSelect1"> select Shift</label>
+                <select class="form-control" id="exampleFormControlSelect1" name="shift">
+                  <option value="1" >Morring</option>
+                  <option value="2" >AfterNoon</option>
+                  <option value="3" >Evenning</option>
+                </select>
+              </div>
+            <input type="submit" class=" form-control text-center btn btn-primary" value="Go"></input>
+        </form>
+    </div>
+{% endblock %}

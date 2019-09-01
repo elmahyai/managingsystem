@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+        <div >
+				<div class="card">
+					<div class="card-header">
+						<div class="card-title">work hours /employees</div>
+					</div>
+					<div class="card-body">
+						<div class="chart-container">
+							<canvas id="lineChart"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+       <div class= "form form-control ">
+            <h3 class="col-12 text-center">
+                Show Spacfic Report
+            </h3>
+        <form class="form text-center" action="{% url 'manager:show_report' %}" method="post">
+            {% csrf_token %}
+            <div class="form-control">
+                <label > Select Date</label>
+                <div >
+                     <label for="input1"> year</label>
+                     <select name="year" id="input1" class="form-control">
+                         <option value="{{year|add:'-1'}}">{{year|add:"-1"}}</option>
+                         <option value="{{year}}">{{year}}</option>
+                         <option value="{{year|add:'1'}}">{{year|add:"
+1"}}</option>
+                     </select>
+                </div>
+                <div >
+                     <label for="input2"> month </label>
+                     <select name="month" id="input2" class="form-control">
+                         <option value="1">January</option>
+                         <option value="2">February</option>
+                         <option value="3">March</option>
+                         <option value="4">April</option>
+                         <option value="5">May</option>
+                         <option value="6">June</option>
+                         <option value="7">July</option>
+                         <option value="8">August</option>
+                         <option value="9">September</option>
+                         <option value="10">October</option>
+                         <option value="11">November</option>
+                         <option value="12">December</option>
+                     </select>
+                 </div>
+            </div>
+            <hr>
+             <div class="form-group ">
+                <label for="exampleFormControlSelect1"> select Employee</label>
+                <select class="form-control" id="exampleFormControlSelect1" name="employee">
+                    {% for emp in employees %}
+                  <option class="text-center" value={{emp.pk}} >{{emp}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+            <input type="submit" class=" form-control text-center btn btn-primary" value="Show"></input>
+        </form>
+    </div>
+    <hr>
+    <a class="btn btn-primary text-center form-control h3" href="{%url 'manager:home' %}" xmlns="http://www.w3.org/1999/html"> Back To Home</a>
+    	<!--   Core JS Files   -->
+	<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+	<script src="{% static 'assets/js/core/popper.min.js' %}  "></script>
+	<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+	<!-- jQuery UI -->
+	<script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+	<script src=" {% static 'assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js' %}"></script>
+
+	<!-- jQuery Sparkline -->
+	<script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+  <!-- Chart JS -->
+    <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
+    <script>
+        var lineChart = document.getElementById('lineChart').getContext('2d');
+
+		var myLineChart = new Chart(lineChart, {
+			type: 'line',
+			data: {
+				labels: [ {% for ele in employees_names %}"{{ele}}",{% endfor %}],
+				datasets: [{
+					label: "work hours in month",
+					borderColor: "#1d7af3",
+					pointBorderColor: "#FFF",
+					pointBackgroundColor: "#1d7af3",
+					pointBorderWidth: 2,
+					pointHoverRadius: 4,
+					pointHoverBorderWidth: 1,
+					pointRadius: 4,
+					backgroundColor: 'transparent',
+					fill: true,
+					borderWidth: 2,
+					data: {{hours}}
+				}]
+			},
+			options : {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					position: 'bottom',
+					labels : {
+						padding: 10,
+						fontColor: '#1d7af3',
+					}
+				},
+				tooltips: {
+					bodySpacing: 4,
+					mode:"nearest",
+					intersect: 0,
+					position:"nearest",
+					xPadding:10,
+					yPadding:10,
+					caretPadding:10
+				},
+				layout:{
+					padding:{left:15,right:15,top:15,bottom:15}
+				}
+			}
+		});
+    </script>
+{% endblock %}

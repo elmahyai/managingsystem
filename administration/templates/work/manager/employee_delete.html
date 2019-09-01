@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row mt-5 mb-5">
+        <div class="col-12">
+            <a href="{% url 'signup' %}" class="btn btn-danger" role="button"> Back </a>
+            <div class="right">
+                <form class="form text-center" action="{% url 'manager:filter_employees' %}" method="post">
+                    {% csrf_token %}
+                     <div class="form-group">
+                        <label for="exampleFormControlSelect1"> select group</label>
+                        <select class="form-control" id="exampleFormControlSelect1" name="group">
+                          {% for group in groups %}
+                            <option value="{{group.pk}}" >{{group.name}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                    <input type="submit" class=" form-control text-center btn btn-primary" value="Go"></input>
+                </form>
+            </div>
+        </div>
+        <hr/>
+        <div class="col-12">
+
+            <h2 class="h1 text-center">Show Employee </h2>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <th>user name </th>
+                        <th>Employee Name</th>
+                        <th>level</th>
+                        <th>Group</th>
+                        <th>Option</th>
+                    </tr>
+                    {% for employee in employees %}
+                        <tr>
+                            <td>
+                                {{ employee.user.username}}
+                            </td>
+                            <td>
+                                {{ employee.fullName }}
+                            </td>
+
+                            <td>
+                                {% if employee.level == 1 %}
+                                ACC
+                                {% elif employee.level == 2 %}
+                                APP
+                                {% elif employee.level == 3 %}
+                                ACC supervisor
+                                {% elif employee.level == 4 %}
+                                APP supervisor
+                                {%else%}
+                                Tower supervisor
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{employee.group}}
+                            </td>
+                            <td>
+                                <button type="submit" value="Delete" id="{{ employee.user.id }}"
+                                        class="btn btn-danger">
+                                    delete
+                                </button>
+<!--                                <a class="btn btn-info"href="{% url 'manager:employee_certification' employee.id %}">-->
+<!--                                    add certification-->
+<!--                                </a>-->
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+                <a href="{% url 'employee_signup' %}" class="btn btn-warning" role="button">Add
+                    Employee</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        let table = document.getElementsByTagName("table")[0],
+            ajax = new XMLHttpRequest();
+
+        table.onclick = function (event) {
+            if (event.target.tagName == "BUTTON") {
+                row = event.target.parentElement.parentElement;
+                ajax.open("GET", "https://demo-workkk.herokuapp.com/employee/delete/" + event.target.id);
+                ajax.send();
+                ajax.onreadystatechange = () => {
+                    if (ajax.readyState === 4 && ajax.status === 200) {
+                        response = JSON.parse(ajax.responseText);
+                        console.log(response);
+                        if (response.success) {
+                            row.remove();
+                        } else {
+                            flash.innerHTML = "<p class='alert alert-danger'>" + data.msg + "</p>";
+                        }
+                        // if(response['msg']== "done")
+                        // row.remove();
+                    }
+                }
+            }
+        }
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="h2 text-center">
+        <p class="">{{employee}}  :  {{date}}</p>
+    </div>
+    <hr>
+<div class="table-responsive">
+    <table class="table text-center h3">
+        <tr>
+            <th class="table-info">Tobic</th>
+            <th class="table-danger">Value</th>
+        </tr>
+
+        <tr>
+            <td class="table-success"># of Work Hours</td>
+            <td>{{hour_num}}</td>
+        </tr>
+
+        <tr>
+            <td class="table-success"># of Breaks Hours</td>
+            <td>{{break_num}}</td>
+        </tr>
+
+        <tr>
+            <td class="table-success"># of Work Days</td>
+            <td>{{work_day}}</td>
+        </tr>
+        <tr>
+            <td class="table-success"># of Swap Request (Done)</td>
+            <td>{{swap_day}}</td>
+        </tr>
+        <tr>
+            <td class="table-success"># of Morning shifts</td>
+            <td>{{employee.morring}}</td>
+        </tr>
+        <tr>
+            <td class="table-success"># of afternoon shifts</td>
+            <td>{{employee.afternoon}}</td>
+        </tr>
+        <tr>
+            <td class="table-success"># of evening shifts</td>
+            <td>{{employee.evening}}</td>
+        </tr>
+    </table>
+</div>
+    <hr>
+    <a class="btn btn-primary text-center form-control h3" href="{%url 'manager:reports' %}" xmlns="http://www.w3.org/1999/html"> Back</a>
+    <hr>
+    <a class="btn btn-danger text-center form-control h3" href="{%url 'manager:home' %}" xmlns="http://www.w3.org/1999/html"> Back To Home</a>
+
+{% endblock %}

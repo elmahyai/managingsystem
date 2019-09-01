@@ -1,0 +1,267 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Work Manager{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/atlantis.min.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Clicker+Script" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/fontello-2f186091/css/fontello.css' %}">
+  </head>
+  <body>
+  	<div class="wrapper">
+		<div class="main-header">
+			<!-- Logo Header -->
+                {% if user.is_authenticated %}
+                  <div class="logo-header" data-background-color="blue">
+                        <a href="{% url 'home' %}" class="logo">
+                          <span class="icon-graduation-cap" data-toggle="tooltip" data-placement="right" title="employee profile"></span>
+                        </a>
+                        <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon">
+                                <i class="icon-menu"></i>
+                            </span>
+                        </button>
+                        <button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="icon-menu"></i>
+                            </button>
+				</div>
+			</div>
+            {% endif %}
+
+                  <nav class="navbar navbar-header navbar-expand-lg text-right" >
+                    <div class=" text-right right">
+                    {% if user.is_authenticated %}
+                      <p class="pt-3">Logged in as <strong>{{ user.username }}</strong> <a href="{% url 'logout' %}">Log out</a>.</p>
+                    {% else %}
+                      <a href="{% url 'login' %}" class="btn btn-light" role="button">Log in</a>
+                    {% endif %}
+                  </div>
+                  </nav>
+		</div>
+		<!-- Sidebar -->
+      {% if user.is_authenticated %}
+        {% if user.is_manager %}
+		<div class="sidebar sidebar-style-2">
+			<div class="sidebar-wrapper scrollbar scrollbar-inner">
+				<div class="sidebar-content">
+					<ul class="nav nav-primary">
+						<li class="nav-item active">
+							<a   href="{% url 'home' %}"  >
+								<i class="fas fa-home"></i>
+								<p>home</p>
+							</a>
+						</li>
+						<hr>
+						<li class="nav-item active">
+							<a   href="{% url 'signup' %}" >
+								<i class="fas fa-address-book"></i>
+								<p>Employees</p>
+							</a>
+						</li>
+						<hr>
+						<li class="nav-item active">
+							<a   href="{% url 'manager:home_to' 1  %}"  >
+								<i class="fas fa-calendar-alt"></i>
+								<p>Shift</p>
+							</a>
+						</li>
+						<hr>
+						<li class="nav-item active">
+							<a  href="{% url 'manager:home_to' 2  %}"   >
+								<i class="fas fa-clock"></i>
+								<p>Work hours</p>
+							</a>
+						</li>
+                      <hr>
+                      <li class="nav-item active">
+							<a   href="{% url 'manager:reports' %}"   >
+								<i class="fas fa-clock"></i>
+								<p>Reports</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+        {% else %}
+        <div class="sidebar sidebar-style-2">
+			<div class="sidebar-wrapper scrollbar scrollbar-inner">
+				<div class="sidebar-content">
+					<ul class="nav nav-primary">
+						<li class="nav-item active">
+							<a   href="{% url 'employee:home_to' %}"  >
+								<i class="fas fa-home"></i>
+								<p>home</p>
+							</a>
+						</li>
+						<hr>
+						<li class="nav-item active">
+							<a   href="{% url 'employee:home' %}"  >
+								<i class="fas fa-calendar-alt"></i>
+								<p>Shift</p>
+							</a>
+						</li>
+                        <hr>
+						<li class="nav-item active">
+							<a   href="{% url 'employee:certification' %}"  >
+								<i class="fas fa-calendar-alt"></i>
+								<p>Certifications</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+        {% endif %}
+      {% endif %}
+
+		<div class="main-panel">
+			<div class="container">
+              <div class="panel-header bg-primary-gradient">
+					<div class="page-inner py-5">
+						<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+						</div>
+					</div>
+              <div class="card mb-3">
+                <div class="card-body">
+                  {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  {% endfor %}
+                  {% block content %}
+                  {% endblock %}
+                </div>
+          </div>
+          </div>
+			</div>
+			<footer class="footer">
+				<div class="container-fluid">
+					<nav class="pull-left">
+						<ul class="nav">
+							<li class="nav-item">
+								<a class="nav-link" href="#">
+									Work Manging
+								</a>
+							</li>
+						</ul>
+					</nav>
+					<div class="copyright ml-auto">
+						2019, made with <i class="fa fa-heart heart text-danger"></i> by <a href="#">WAKEB</a>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+
+	</div>
+
+
+
+<!--    end of base here-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      })
+    </script>
+      <!--   Core JS Files   -->
+    <script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+    <!-- jQuery UI -->
+    <script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js' %}"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+    <!-- Moment JS -->
+    <script src="{% static 'assets/js/plugin/moment/moment.min.js' %}"></script>
+
+    <!-- Chart JS -->
+    <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+    <!-- Chart Circle -->
+    <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+
+    <!-- Datatables -->
+    <script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+    <!-- Bootstrap Toggle -->
+    <script src="{% static 'assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="{% static 'assets/js/plugin/jqvmap/jquery.vmap.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugin/jqvmap/maps/jquery.vmap.world.js' %}"></script>
+
+    <!-- Google Maps Plugin -->
+    <script src="{% static 'assets/js/plugin/gmaps/gmaps.js' %}"></script>
+
+    <!-- Dropzone -->
+    <script src="{% static 'assets/js/plugin/dropzone/dropzone.min.js' %}"></script>
+
+    <!-- Fullcalendar -->
+    <script src="{% static 'assets/js/plugin/fullcalendar/fullcalendar.min.js' %}"></script>
+
+    <!-- DateTimePicker -->
+    <script src="{% static 'assets/js/plugin/datepicker/bootstrap-datetimepicker.min.js' %}"></script>
+
+    <!-- Bootstrap Tagsinput -->
+    <script src="{% static 'assets/js/plugin/bootstrap-tagsinput/bootstrap-tagsinput.min.js' %}"></script>
+
+    <!-- Bootstrap Wizard -->
+    <script src="{% static 'assets/js/plugin/bootstrap-wizard/bootstrapwizard.js' %}"></script>
+
+    <!-- jQuery Validation -->
+    <script src="{% static 'assets/js/plugin/jquery.validate/jquery.validate.min.js' %}"></script>
+
+    <!-- Summernote -->
+    <script src="{% static 'assets/js/plugin/summernote/summernote-bs4.min.js' %}"></script>
+
+    <!-- Select2 -->
+    <script src="{% static 'assets/js/plugin/select2/select2.full.min.js' %}"></script>
+
+    <!-- Sweet Alert -->
+    <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+    <!-- Owl Carousel -->
+    <script src="{% static 'assets/js/plugin/owl-carousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Magnific Popup -->
+    <script src="{% static 'assets/js/plugin/jquery.magnific-popup/jquery.magnific-popup.min.js' %}"></script>
+
+    <!-- Atlantis JS -->
+    <script src="{% static 'assets/js/atlantis.min.js' %}"></script>
+
+
+  <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+<script>
+	WebFont.load({
+		google: {"families":["Lato:300,400,700,900"]},
+		custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ["{% static 'assets/css/fonts.min.css'%}"]},
+		active: function() {
+			sessionStorage.fonts = true;
+		}
+	});
+</script>
+  </body>
+</html>

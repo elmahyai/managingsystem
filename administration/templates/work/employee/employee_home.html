@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 class="text-center table-success form form-control">wellome {{request.user.employee}}</h1>
+
+    <table class="table table-hover table-bordered">
+        <tr class="text-center">
+            <th class="table-warning">Day</th>
+            <th class="table-info">Status</th>
+            <th class="table-success">Option</th>
+        </tr>
+
+      {% for ele in data %}
+      <tr class="text-center h3 ">
+          <td >
+              {{ele.day|date:"D"}} : {{ele.day}}
+          </td>
+          {% load mytags %}
+          {% if ele.day_types.type == 1%}
+            <td class="bg-warning" >
+
+          {% elif ele.day_types.type == 2 %}
+            <td class="  bg-info">
+
+          {% elif ele.day_types.type == 3 %}
+          <td class="  bg-danger">
+
+          {% elif ele.day_types.type == 4 %}
+            <td class="  bg-success">
+
+          {% elif ele.day_types.type == 5 %}
+            <td class="  bg-primary">
+
+          {% elif ele.day_types.type ==  6%}
+            <td class=" bg-secondary">
+          {% endif %}
+                {{ele.day_types.type|typeConvert}}
+            </td>
+            <td>
+                {% if ele.day_types.type == 1 or ele.day_types.type == 2 or ele.day_types.type == 3  %}
+                    {% if ele.day_types.called %}
+                    <p class="btn-warning"> Waiting Response </p>
+                    {% else %}
+                    <a class="btn btn-danger" href="{% url 'employee:swap' ele.day_types.pk %}">Swap</a>
+                    {% endif %}
+                {% endif %}
+            </td>
+
+      </tr>
+      {% endfor %}
+  </table>
+{% endblock %}

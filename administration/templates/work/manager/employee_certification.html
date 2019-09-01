@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="admin-home mb-4">
+        <h2 class="h1 mb-4 text-center">Group add</h2>
+        <hr/>
+        {% if certifications|length > 0 %}
+        <div class="row">
+         <form class="form-control" method="post" action="#">
+              {% csrf_token %}
+             <div >
+                 <label for="input1"> certification</label>
+                 <select name="certification" id="input1" class="form-control">
+                     {% for cert in certifications %}
+                     <option value="{{cert.pk}}">{{cert.name}}</option>
+                     {% endfor %}
+                 </select>
+             </div>
+             <hr>
+             <div>
+                 <label for="input2"> Start date</label>
+                 <input required class="form-control" type="date" name="start_date" id="input2">
+             </div>
+             <hr>
+             <div>
+                 <label for="input3"> Years</label>
+                 <input required class="form-control" type="number" name="years" id="input3">
+             </div>
+             <hr>
+             <input hidden type="text" name="pk" value="{{pk}}">
+             <hr>
+             <input class="form-control btn btn-success" type="submit" value="add">
+         </form>
+        </div>
+        {% else %}
+        <h2>
+            there is no certifications to add
+        </h2>
+        {% endif %}
+        <div class="col-12">
+            <a href="{% url 'signup' %}" class="btn btn-danger" role="button"> Back </a>
+        </div>
+    </div>
+{% endblock %}

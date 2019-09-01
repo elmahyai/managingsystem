@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+    {% if month_type == 0 %}
+    <div class="form form-control text-center">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input class="btn btn-info h3 form-control" type="submit" value="Show Next Month">
+            </form>
+            <a class="btn btn-dark h3 form-control" href="{% url 'manager:set_shifts' %} ">Set month shifts</a>
+    </div>
+    {% else %}
+    <div class="form form-control text-center">
+            <form action="" method="get">
+                {% csrf_token %}
+                <input class="btn btn-info h3 form-control" type="submit" value="Back To prevois Month">
+            </form>
+    </div>
+    {% endif%}
+
+
+
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+        <tr class="text-center">
+            <th class="table-warning">Day</th>
+            <th class="table-info">morning</th>
+            <th class="table-info">After Noon</th>
+            <th class="table-info">Night</th>
+            <th class="table-info">OnCall</th>
+            <th class="table-info">Sleep</th>
+        </tr>
+
+      {% for ele in data %}
+      <tr class="text-center">
+          <td class=" text-center ">
+              <h5>{{ele.day|date:"D"}} : {{ele.day}}</h5>
+          </td>
+          {% load mytags %}
+          {% for type in ele.day_types %}
+          {% if type and type.group.name == "A" %}
+            <td class="bg-warning ">
+                <a  href="{% url 'manager:work_hour_update' type.id %}"> -> </a>
+                <select class="btn-warning">
+          {% elif type and type.group.name == "B" %}
+          <td class="bg-info">
+          <a  href="{% url 'manager:work_hour_update' type.id %}"> -> </a>
+                <select class="btn-info" >
+          {% elif type and type.group.name == "C" %}
+          <td class="bg-danger">
+          <a  href="{% url 'manager:work_hour_update' type.id %}"> -> </a>
+                <select class="btn-danger" >
+          {% elif type and type.group.name == "D" %}
+          <td class="bg-success">
+          <a  href="{% url 'manager:work_hour_update' type.id %}"> -> </a>
+                <select class="btn-success" >
+          {% elif type and type.group.name == "E" %}
+          <td class="bg-primary">
+          <a  href="{% url 'manager:work_hour_update' type.id %}"> -> </a>
+                <select class="btn-primary" >
+          {% else %}
+          <td class="bg-secondary">
+                <select class="btn-secondary" >
+          {% endif%}
+                    <option value="6-{{type.pk}}-{{ forloop.counter }}-{{ ele.day|date:'d m Y' }}">NONE</option>
+                    <option value="1-{{type.pk}}-{{ forloop.counter }}-{{ ele.day|date:'d m Y' }}" {% if type and type.group.name == "A" %}selected{% endif%}>A</option>
+                    <option value="2-{{type.pk}}-{{ forloop.counter }}-{{ ele.day|date:'d m Y' }}" {% if type and type.group.name == "B" %}selected{% endif%}>B</option>
+                    <option value="3-{{type.pk}}-{{ forloop.counter }}-{{ ele.day|date:'d m Y' }}" {% if type and type.group.name == "C" %}selected{% endif%}>C</option>
+                    <option value="4-{{type.pk}}-{{ forloop.counter }}-{{ ele.day|date:'d m Y' }}" {% if type and type.group.name == "D" %}selected{% endif%}>D</option>
+                    <option value="5-{{type.pk}}-{{ forloop.counter }}-{{ ele.day|date:'d m Y' }}" {% if type and type.group.name == "E" %}selected{% endif%}>E</option>
+                </select>
+            </td>
+          {% endfor %}
+
+      </tr>
+      {% endfor %}
+  </table>
+    </div>
+
+    <script type="text/javascript">
+            let table = document.getElementsByTagName("table")[0],
+            ajax = new XMLHttpRequest();
+
+            table.onclick = function (event) {
+            if (event.target.tagName == "SELECT") {
+                event.stopPropagation()
+                console.log(event.target.value)
+                num=event.target.value.split('-')
+                if(num[1] == ""){
+                    num[1] = "n"
+                }
+  
+                ajax.open("GET", "https://demo-workkk.herokuapp.com/manager/changestatus/"+num[0]+"/"+num[1]+"/"+num[2]+"/"+num[3]);
+                ajax.setRequestHeader("Access-Control-Allow-Origin", "*");
+                ajax.send();
+                ajax.onreadystatechange = () => {
+                        if (ajax.readyState === 4 && ajax.status === 200) {
+                        response = JSON.parse(ajax.responseText);
+                        console.log(response);
+                        if (response.success) {
+                            if(num[0] == '1'){
+                                event.target.classList= " btn-warning";
+                                event.target.parentElement.classList = 'bg-warning'
+                            }else if(num[0] == '2'){
+                                event.target.classList= " btn-info";
+                                event.target.parentElement.classList = 'bg-info'
+                            }else if(num[0] == '3'){
+                                event.target.classList=" btn-danger";
+                                event.target.parentElement.classList = 'bg-danger'
+                            }else if(num[0] == '4'){
+                                event.target.classList= " btn-success";
+                                event.target.parentElement.classList = 'bg-success'
+                            }else if(num[0] == '5' ){
+                                event.target.classList = " btn-primary";
+                                event.target.parentElement.classList = 'bg-primary'
+                            }else{
+                                event.target.classList = " btn-secondary";
+                                event.target.parentElement.classList = 'bg-secondary'
+                            }
+                            if(response.tr_number != null && response.tr_number != 6)
+                            {
+                                console.log("in")
+                                if(response.group == null){
+                                    console.log("null")
+                                    event.target.parentElement.parentElement.children[response.tr_number].classList = "bg-secondary"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].classList = "btn-secondary"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].children[0].setAttribute("selected","")
+                                }else if(response.group == "A"){
+                                    console.log("A")
+                                    event.target.parentElement.parentElement.children[response.tr_number].classList = "bg-warning"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].classList = "btn-warning"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].children[1].setAttribute("selected","")
+
+                                }else if(response.group == "B"){
+                                    console.log("B")
+                                    event.target.parentElement.parentElement.children[response.tr_number].classList = "bg-info"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].classList = "btn-info"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].children[2].setAttribute("selected","")
+
+                                }else if(response.group == "C"){
+                                    console.log("C")
+                                    event.target.parentElement.parentElement.children[response.tr_number].classList = "bg-danger"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].classList = "btn-danger"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].children[3].setAttribute("selected","")
+
+                                }else if(response.group == "D"){
+                                    console.log("D")
+                                    event.target.parentElement.parentElement.children[response.tr_number].classList = "bg-success"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].classList = "btn-success"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].children[4].setAttribute("selected","")
+
+                                }else if(response.group == "E"){
+                                    console.log("E")
+                                    event.target.parentElement.parentElement.children[response.tr_number].classList = "bg-primary"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].classList = "btn-primary"
+                                    event.target.parentElement.parentElement.children[response.tr_number].children[1].children[5].setAttribute("selected","")
+                                }
+                            }
+
+                        } else {
+                            flash.innerHTML = "<p class='alert alert-danger'>" + data.msg + "</p>";
+
+                        }
+                    }
+                   }
+                }
+            }
+
+
+    </script>
+{% endblock %}

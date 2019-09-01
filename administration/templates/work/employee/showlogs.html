@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row mt-5 mb-5">
+        <div class="col-12">
+            <a href="{% url 'employee:home' %}" class="btn btn-danger" role="button"> Back </a>
+        </div>
+        <hr/>
+        <div class="col-12">
+
+            <h2 class="h1 text-center"> Logs </h2>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>level</th>
+                        <th>text</th>
+                    </tr>
+                    {% for log in logs %}
+                        <tr>
+                            <td>
+                                {{ log.employee.fullName }}
+                            </td>
+
+                            <td>
+                                {% if log.level == 1 %}
+                                ACC
+                                {% elif log.level == 2 %}
+                                APP
+                                {% elif log.level == 3 %}
+                                ACC supervisor
+                                {% elif log.level == 4 %}
+                                APP supervisor
+                                {%else%}
+                                Tower supervisor
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{log.text}}
+                            </td>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+                <hr>
+                <form class="form text-center" action="{% url 'employee:sendLog' %}" method="post">
+                {% csrf_token %}
+                <div class="form-control">
+                    <label for="exampleFormControlSelect2"> you Log for next shift</label>
+                    <input name="log" type="text" class="form-control" id="exampleFormControlSelect2" >
+                </div>
+                <hr>
+                <input type="submit" class=" form-control text-center btn btn-primary" value="send this log">
+        </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

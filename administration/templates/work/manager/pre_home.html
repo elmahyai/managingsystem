@@ -1,0 +1,529 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mathfilters %}
+{% block content %}
+
+{% if swaps|length > 0%}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <tr class="text-center">
+            <th class="table-warning"> Swap Request </th>
+            <th class="table-info "> Response </th>
+        </tr>
+         {% load mytags %}
+        {% for swap in swaps %}
+            <tr class="text-center">
+                <td class="h4"> {{swap.owner }}  want to swap his shift : {{ swap.shift.type|typeConvert}} with {{swap.users.first}} in {{swap.shift.day|date:"D"}} : {{swap.shift.day}}  </td>
+                <td>
+                    <a class="btn btn-success" href="{% url 'manager:swapaccept' swap.pk %}">Accapt</a>
+                    <a class="btn  btn-danger" href="{% url 'manager:swaprefuse' swap.pk %}"> Noo</a>
+                </td>
+            </tr>
+        {%endfor%}
+    </table>
+</div>
+    <hr>
+{% endif %}
+{% if certifications|length > 0 %}
+    <div class="text-center form-control h3">Certifications alerts</div>
+    <div class="table-resposive">
+            <table class="table table-hover table-bordered">
+            <tr class="text-center">
+                <th class="table-warning">  employee </th>
+                <th class="table-info "> Certification </th>
+                <th class="table-info "> day for end day </th>
+                <th class="table-info "> option </th>
+            </tr>
+                {% for cert in certifications %}
+                <tr>
+                    <td>
+                        {{cert.employee.fullName}}
+                    </td>
+                    <td>
+                        {{cert.certification.name}}
+                    </td>
+                    <td>
+                        {{cert.days}}
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" href="{% url 'manager:employee_certification' cert.employee.id %}">update</a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+    <hr>
+{% endif %}
+
+
+{% if certification_request1|length > 0 or certification_request2|length > 0 %}
+	<div class="text-center form-control h3">Certifications requset</div>
+    <div class="table-resposive">
+            <table class="table table-hover table-bordered">
+            <tr class="text-center">
+                <th class="table-warning">  employee </th>
+                <th class="table-info "> Certification </th>
+                <th class="table-info ">start day </th>
+                <th class="table-info ">years </th>
+                <th class="table-info "> option </th>
+            </tr>
+                {% for cert in certification_request1 %}
+                <tr>
+                    <td>
+                        {{cert.employee.fullName}}
+                    </td>
+                    <td>
+                        {{cert.certification.name}}
+                    </td>
+                    <td>
+                        {{cert.start_date}}
+                    </td>
+					<td>
+						{{ cert.years }}
+					</td>
+                    <td>
+                        <a class="btn btn-danger" href="{% url 'manager:accept_certification' cert.pk %}">accept</a>
+                        <a class="btn btn-danger" href="{% url 'manager:refuse_certification' cert.pk %}">refuse</a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+				{% for cert in certification_request2 %}
+                <tr>
+                    <td>
+                        {{cert.employee.fullName}}
+                    </td>
+                    <td>
+                        {{cert.certification.name}}
+                    </td>
+                    <td>
+                        {{cert.start_date}}
+                    </td>
+					<td>
+						{{cart.years}}
+					</td>
+                    <td>
+                        <a class="btn btn-danger" href="{% url 'manager:accept_certification' cert.pk %}">accept</a>
+                        <a class="btn btn-danger" href="{% url 'manager:refuse_certification' cert.pk %}">refuse</a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+    <hr>
+{% endif %}
+
+
+    <div class="page-inner mt--5">
+		<div class="row mt--2">
+						<div class="col-md-6">
+							<div class="card full-height">
+								<div class="card-body">
+									<div class="card-title">Genral Numbers</div>
+									<div class="card-category">numbers from system</div>
+									<div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+										<div class="px-2 pb-2 pb-md-0 text-center">
+											<div id="circles-1"></div>
+											<h6 class="fw-bold mt-3 mb-0">Employees</h6>
+										</div>
+										<div class="px-2 pb-2 pb-md-0 text-center">
+											<div id="circles-2"></div>
+											<h6 class="fw-bold mt-3 mb-0">Groups</h6>
+										</div>
+										<div class="px-2 pb-2 pb-md-0 text-center">
+											<div id="circles-3"></div>
+											<h6 class="fw-bold mt-3 mb-0">Done Swaps</h6>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="card full-height">
+								<div class="card-body">
+									<div class="card-title"> Each Group Work hours / month</div>
+									<div class="row py-3">
+										<div class="col-md-4 d-flex flex-column justify-content-around">
+										</div>
+										<div class="col-md-8">
+											<div id="chart-container">
+												<canvas id="totalIncomeChart"></canvas>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+		<div class="row">
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">Current Shift</div>
+								</div>
+
+								<div class="card-body pb-0">
+									<div class="d-flex">
+										<div class="avatar">
+											<img src="{% static 'assets/img/icon.ico' %} " alt="..." class="avatar-img rounded-circle">
+										</div>
+										{% for current in current_shift %}
+										<div class="flex-1 pt-1 ml-2">
+											<h6 class="fw-bold mb-1">Shift ==> {% if current.type == 1%}Morning{% elif current.type == 2 %} Afternoon {% else %} Evening {% endif %}</h6>
+											<hr>
+											<h6 class="fw-bold mb-1">day ==> {{current.day|date:"D"}} : {{current.day}}</h6>
+											<hr>
+											<h6 class="fw-bold mb-1">Group ==> {{current.group.name}}</h6>
+											<hr>
+											<small class="text-muted">Number of Employees ==> {{current.group.employees.all|length}}</small>
+										</div>
+										{% endfor %}
+										<div class="d-flex ml-auto align-items-center">
+											<h3 class="text-info fw-bold">{{employee.age}}</h3>
+										</div>
+									</div>
+									<hr>
+									<div class="separator-dashed"></div>
+									<div class="pull-in">
+										<canvas id="topProductsChart"></canvas>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-header">
+									<div class="card-title">Next Shift</div>
+								</div>
+
+								<div class="card-body pb-0">
+									<div class="d-flex">
+										<div class="avatar">
+											<img src="{% static 'assets/img/icon.ico' %} " alt="..." class="avatar-img rounded-circle">
+										</div>
+										{% for current in next_shift %}
+										<div class="flex-1 pt-1 ml-2">
+											<h6 class="fw-bold mb-1">Shift ==> {% if current.type == 1%}Morning{% elif current.type == 2 %} Afternoon {% else %} Evening {% endif %}</h6>
+											<hr>
+											<h6 class="fw-bold mb-1">day ==> {{current.day|date:"D"}} : {{current.day}}</h6>
+											<hr>
+											<h6 class="fw-bold mb-1">Group ==> {{current.group.name}}</h6>
+											<hr>
+											<small class="text-muted">Number of Employees ==> {{current.group.employees.all|length}}</small>
+										</div>
+										{% endfor %}
+										<div class="d-flex ml-auto align-items-center">
+											<h3 class="text-info fw-bold">{{employee.age}}</h3>
+										</div>
+									</div>
+									<hr>
+									<div class="separator-dashed"></div>
+									<div class="pull-in">
+										<canvas id="topProductsChart1"></canvas>
+									</div>
+								</div>
+
+							</div>
+						</div>
+    </div>
+		<div class="row">
+				<div class="col-md-6">
+							<div class="card">
+								<div class="card-body">
+									<div class="card-title fw-mediumbold">Recent Done Swaps</div>
+									{% for swap in recent_swaps %}
+									<div class="card-list">
+										<div class="item-list">
+											<div class="avatar">
+												<img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle">
+											</div>
+											<div class="info-user ml-3">
+												<div class="username"> {{swap.owner}} with {{swap.users.all.first}}  </div>
+												<div class="status">{{ swap.day |date:"D"}} : {{swap.day}}</div>
+											</div>
+										</div>
+								</div>
+									{% endfor %}
+								</div>
+						</div>
+					</div>
+    </div>
+
+		<div class="row">
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-body">
+									<div class="card-title fw-mediumbold">Lower Employees</div>
+									{% for swap in Top_employee %}
+									<div class="card-list">
+										<div class="item-list">
+											<div class="avatar">
+												<img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle">
+											</div>
+											<div class="info-user ml-3">
+												<div class="username"> {{swap.fullName}}  </div>
+												<div class="status"> {{ swap.morring|add:swap.afternoon|add:swap.evening|mul:8 }} hours Works</div>
+											</div>
+										</div>
+								</div>
+									{% endfor %}
+								</div>
+						</div>
+					</div>
+						<div class="col-md-6">
+							<div class="card">
+								<div class="card-body">
+									<div class="card-title fw-mediumbold">Top Employees</div>
+									{% for swap in lower_employee %}
+									<div class="card-list">
+										<div class="item-list">
+											<div class="avatar">
+												<img src="{% static 'assets/img/jm_denis.jpg' %}" alt="..." class="avatar-img rounded-circle">
+											</div>
+											<div class="info-user ml-3">
+												<div class="username"> {{swap.fullName}}  </div>
+												<div class="status">{{ swap.morring|add:swap.afternoon|add:swap.evening|mul:8 }} hours Works</div>
+											</div>
+
+										</div>
+								</div>
+									{% endfor %}
+								</div>
+						</div>
+					</div>
+    </div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<div class="card-title">work hours /Group</div>
+					</div>
+					<div class="card-body">
+						<div class="chart-container">
+							<canvas id="lineChart"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+									<div class="card">
+										<div class="card-header">
+											<div class="card-title">Employees/Role</div>
+										</div>
+										<div class="card-body">
+											<div class="chart-container">
+												<canvas id="lineChart1"></canvas>
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+	</div>
+		<!--   Core JS Files   -->
+	<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
+	<script src="{% static 'assets/js/core/popper.min.js' %}  "></script>
+	<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+	<!-- jQuery UI -->
+	<script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+	<script src=" {% static 'assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js' %}"></script>
+
+	<!-- jQuery Sparkline -->
+	<script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+  <!-- Chart JS -->
+    <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
+ <!-- Chart Circle -->
+    <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+	<script>
+		Circles.create({
+			id:'circles-1',
+			radius:45,
+			value:60,
+			maxValue:100,
+			width:7,
+			text: '{{employeeNumber}}',
+			colors:['#f1f1f1', '#FF9E27'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		Circles.create({
+			id:'circles-2',
+			radius:45,
+			value:70,
+			maxValue:100,
+			width:7,
+			text: '{{groupsNumber}}',
+			colors:['#f1f1f1', '#2BB930'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		Circles.create({
+			id:'circles-3',
+			radius:45,
+			value:40,
+			maxValue:100,
+			width:7,
+			text: '{{doneSwaps}}',
+			colors:['#f1f1f1', '#F25961'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		var totalIncomeChart = document.getElementById('totalIncomeChart').getContext('2d');
+
+		var mytotalIncomeChart = new Chart(totalIncomeChart, {
+			type: 'bar',
+			data: {
+				labels: ["A", "B", "C", "D", "E"],
+				datasets : [{
+					label: "Total Work hours",
+					backgroundColor: '#ff9e27',
+					borderColor: 'rgb(23, 125, 255)',
+					data: {{group_hours}},
+				}],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					display: false,
+				},
+				scales: {
+					yAxes: [{
+						ticks: {
+							display: false //this will remove only the label
+						},
+						gridLines : {
+							drawBorder: false,
+							display : false
+						}
+					}],
+					xAxes : [ {
+						gridLines : {
+							drawBorder: false,
+							display : false
+						}
+					}]
+				},
+			}
+		});
+
+		$('#lineChart').sparkline([105,103,123,100,95,105,115], {
+			type: 'line',
+			height: '70',
+			width: '100%',
+			lineWidth: '2',
+			lineColor: '#ffa534',
+			fillColor: 'rgba(255, 165, 52, .14)'
+		});
+	</script>
+	<script>
+		var lineChart = document.getElementById('lineChart').getContext('2d');
+		var lineChart1 = document.getElementById('lineChart1').getContext('2d');
+
+		var myLineChart = new Chart(lineChart, {
+			type: 'line',
+			data: {
+				labels: ["A","B","C","D","E"],
+				datasets: [{
+					label: "work hours in month",
+					borderColor: "#1d7af3",
+					pointBorderColor: "#FFF",
+					pointBackgroundColor: "#1d7af3",
+					pointBorderWidth: 2,
+					pointHoverRadius: 4,
+					pointHoverBorderWidth: 1,
+					pointRadius: 4,
+					backgroundColor: 'transparent',
+					fill: true,
+					borderWidth: 2,
+					data: {{group_hours}}
+				}]
+			},
+			options : {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					position: 'bottom',
+					labels : {
+						padding: 10,
+						fontColor: '#1d7af3',
+					}
+				},
+				tooltips: {
+					bodySpacing: 4,
+					mode:"nearest",
+					intersect: 0,
+					position:"nearest",
+					xPadding:10,
+					yPadding:10,
+					caretPadding:10
+				},
+				layout:{
+					padding:{left:15,right:15,top:15,bottom:15}
+				}
+			}
+		});
+
+		var myLineChart1 = new Chart(lineChart1, {
+			type: 'line',
+			data: {
+				labels: ["ACC", "APP", "ACC superVisor", "APP SuperVisor", "Tower SuperVisor"],
+				datasets: [{
+					label: "number of employees",
+					borderColor: "#1d7af3",
+					pointBorderColor: "#FFF",
+					pointBackgroundColor: "#1d7af3",
+					pointBorderWidth: 2,
+					pointHoverRadius: 4,
+					pointHoverBorderWidth: 1,
+					pointRadius: 4,
+					backgroundColor: 'transparent',
+					fill: true,
+					borderWidth: 2,
+					data: {{employees_num}}
+				}]
+			},
+			options : {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					position: 'bottom',
+					labels : {
+						padding: 10,
+						fontColor: '#1d7af3',
+					}
+				},
+				tooltips: {
+					bodySpacing: 4,
+					mode:"nearest",
+					intersect: 0,
+					position:"nearest",
+					xPadding:10,
+					yPadding:10,
+					caretPadding:10
+				},
+				layout:{
+					padding:{left:15,right:15,top:15,bottom:15}
+				}
+			}
+		});
+
+
+	</script>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Adding new employee</h2>
+  <p class="lead">Select below the type of employee you want to create</p>
+  <a href="{% url 'employee_signup' %}" class="btn btn-info btn-lg" role="button">Add Employee</a>
+  <a href="{% url 'manager_signup' %}" class="btn btn-warning btn-lg" role="button">Add manager</a>
+  <a href="{% url 'manager:add_Certification' %}" class="btn btn-warning btn-lg" role="button">Add Certification</a>
+  <a href="{% url 'manager:group_signup' %}" class="btn btn-success btn-lg" role="button">Add Group</a>
+  <a href="{% url 'manager:employee_delete' %}" class="btn btn-danger btn-lg" role="button">show Employee</a>
+{% endblock %}

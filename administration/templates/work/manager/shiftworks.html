@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="alert-danger alert-dismissible fade show text-center h4" role="alert" id="diverror" >
+</div>
+<hr>
+<div class="table-responsive">
+<table class="table  text.center ">
+    <tr class=" from-control bg-success">
+            <th class="table-warning">Employee</th>
+            {% if type == 1 %}
+            <th> 6 : 7 AM</th>
+            <th> 7 : 8 AM</th>
+            <th> 8 : 9 AM</th>
+            <th> 9 : 10 AM</th>
+            <th> 10 : 11 AM</th>
+            <th> 11 : 12 PM</th>
+            <th> 12 : 1 PM</th>
+            <th> 1 : 2 PM</th>
+            {% elif type == 2 %}
+                <th> 2 : 3 PM</th>
+                <th> 3 : 4 PM</th>
+                <th> 4 : 5 PM</th>
+                <th> 5 : 6 PM</th>
+                <th> 6 : 7 PM</th>
+                <th> 7 : 8 PM</th>
+                <th> 8 : 9 PM</th>
+                <th> 9 : 10 PM</th>
+            {% else %}
+                <th> 10 : 11 PM</th>
+                <th> 11 :12  AM</th>
+                <th> 12 : 1 AM</th>
+                <th> 1 : 2 AM</th>
+                <th> 2 : 3 AM</th>
+                <th> 3 : 4 AM</th>
+                <th> 4 : 5 AM</th>
+                <th> 5 : 6 AM</th>
+            {% endif %}
+        </tr>
+        {% for ele in data %}
+            <tr class="text-center form from-control  ">
+                <td class="bg-info">{{ele.shift.employee}}</td>
+
+                <!--                one      -->
+                {% if ele.workhour.one == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="1-1-{{ele.workhour.pk}}" {% if ele.workhour.one == True %}selected{% endif%}>ON</option>
+                        <option value="1-0-{{ele.workhour.pk}}" {% if ele.workhour.one == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+                                <!--                two      -->
+
+                {% if ele.workhour.two == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="2-1-{{ele.workhour.pk}}" {% if ele.workhour.two == True %}selected{% endif%}>ON</option>
+                        <option value="2-0-{{ele.workhour.pk}}" {% if ele.workhour.two == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+                                <!--                three      -->
+                {% if ele.workhour.three == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="3-1-{{ele.workhour.pk}}" {% if ele.workhour.three == True %}selected{% endif%}>ON</option>
+                        <option value="3-0-{{ele.workhour.pk}}" {% if ele.workhour.three == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+                                <!--                four      -->
+
+                {% if ele.workhour.four == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="4-1-{{ele.workhour.pk}}" {% if ele.workhour.four == True %}selected{% endif%}>ON</option>
+                        <option value="4-0-{{ele.workhour.pk}}" {% if ele.workhour.four == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+
+                                <!--                five      -->
+
+                {% if ele.workhour.five == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="5-1-{{ele.workhour.pk}}" {% if ele.workhour.five == True %}selected{% endif%}>ON</option>
+                        <option value="5-0-{{ele.workhour.pk}}" {% if ele.workhour.five == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+                                <!--                six      -->
+
+                {% if ele.workhour.six == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="6-1-{{ele.workhour.pk}}" {% if ele.workhour.six == True %}selected{% endif%}>ON</option>
+                        <option value="6-0-{{ele.workhour.pk}}" {% if ele.workhour.six == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+                                <!--                seven      -->
+
+                {% if ele.workhour.seven == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="7-1-{{ele.workhour.pk}}" {% if ele.workhour.seven == True %}selected{% endif%}>ON</option>
+                        <option value="7-0-{{ele.workhour.pk}}" {% if ele.workhour.seven == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+
+                                <!--                eight      -->
+
+                {% if ele.workhour.eight == True %}
+                <td class="bg-success" >
+                    <select class=" btn-success">
+                 {% else %}
+                <td class="bg-danger" >
+                    <select class=" btn-danger">
+                 {% endif %}
+                        <option value="8-1-{{ele.workhour.pk}}" {% if ele.workhour.eight == True %}selected{% endif%}>ON</option>
+                        <option value="8-0-{{ele.workhour.pk}}" {% if ele.workhour.eight == False %}selected{% endif%}>OFF</option>
+                    </select>
+                </td>
+
+
+            </tr>
+        {% endfor %}
+</table>
+    <hr>
+        {% if group_shift.brief %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <tr>
+                                <th>Brief</th>
+                            </tr>
+                                <tr>
+                                    <td>
+                                        {{ group_shift.brief}}
+                                    </td>
+                                </tr>
+                        </table>
+                    </div>
+        {% else %}
+            <h2 class="h1 text-center">this shift doesn't have any briefs yet </h2>
+        {% endif %}
+    <hr>
+</div>
+    <hr>
+    <div class="row">
+         <form class="form-control" method="post" action="{% url 'manager:addbrief' %}">
+              {% csrf_token %}
+             <div>
+                 <label for="input2"> Brief </label>
+                 <input required class="form-control" type="text" name="Breif" id="input2">
+             </div>
+             <input hidden name="shift" value="{{group_shift.pk}}">
+             <hr>
+             <input class="form-control btn btn-success" type="submit" value="add Brief">
+         </form>
+        </div>
+     <hr>
+<a class="btn btn-primary text-center form-control h3" href="{%url 'manager:home' %}" xmlns="http://www.w3.org/1999/html"> Back To Home</a>
+
+
+ <script type="text/javascript">
+            let errorcatch =document.getElementById("diverror")
+            let table = document.getElementsByTagName("table")[0],
+            ajax = new XMLHttpRequest();
+
+            table.onclick = function (event) {
+            if (event.target.tagName == "SELECT") {
+                console.log(event.target.value)
+                num=event.target.value.split('-')
+                ajax.open("GET", "https://demo-workkk.herokuapp.com/manager/WorkHourManage/" + num[0] +"/"+num[1]+"/"+num[2]);
+                ajax.setRequestHeader("Access-Control-Allow-Origin", "*");
+                ajax.send();
+                ajax.onreadystatechange = () => {
+                        if (ajax.readyState === 4 && ajax.status === 200) {
+                        response = JSON.parse(ajax.responseText);
+                        console.log(response);
+                        if (response.success) {
+                            if(num[1] == '0'){
+                                event.target.classList= " btn-danger";
+                                event.target.parentElement.classList = 'bg-danger'
+                            }else if(num[1] == '1'){
+                                event.target.classList= " btn-success";
+                                event.target.parentElement.classList = 'bg-success'
+                            }
+                          }
+                           else {
+                              event.target.children[1].setAttribute("selected","")
+                             errorcatch.innerHTML = "Sorry , the Max number of break hours is 2 ";
+
+                        }
+                    }
+                   }
+                }
+            }
+
+
+    </script>
+{% endblock %}
