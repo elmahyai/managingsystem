@@ -1,12 +1,13 @@
 from administration.decorators import manager_required ,employee_required
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
-from administration.models import User ,EmployeeStatus,Employee,SwapRequest,Log,Group,Certification,Employee_Certification,GroupStatus
+from administration.models import User ,EmployeeStatus,Employee,SwapRequest\
+    ,Log,Group,Certification,Employee_Certification,GroupStatus,Brief
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.shortcuts import redirect
 from administration.forms import EmployeeSignupForm
-from django.http import HttpResponse , JsonResponse
+from django.http import   JsonResponse
 from django.shortcuts import render
 from datetime import date
 import calendar,datetime
@@ -53,10 +54,7 @@ def Pre_Employee_Home(request):
         Employee.objects.filter(level=4).count(),
         Employee.objects.filter(level=5).count(),
     ]
-
     swapRequest= request.user.employee.SwapRequests.filter(answer=False,admin_request=False)
-    print("======-------------------------------==========",swapRequest)
-
     live = False
     today = datetime.date.today()
     day = datetime.timedelta(days=1)
@@ -70,7 +68,6 @@ def Pre_Employee_Home(request):
                 (day_before.type == 3 and (datetime.datetime.now().hour in [0, 1, 2, 3, 4, 5])) or \
                 (day_shift.type == 3 and (datetime.datetime.now().hour in [22, 23])):
             live = True;
-
     # get group shift
     if datetime.datetime.now().hour < 6:
         group_shift=GroupStatus.objects.get(day=yesterday,type=3)
@@ -112,6 +109,11 @@ def Pre_Employee_Home(request):
         day = day - datetime.timedelta(days=1)
     # current shift
     current_shift = GroupStatus.objects.filter(day=day, type=int(shift))
+    # get breifs
+    breifs = Brief.objects.filter(employee=request.user.employee , shift=current_shift[0])
+    print("================")
+    print(breifs.count())
+    print("================")
     return render(request,'work/employee/pre_home.html',{
        'employees_num': employees_num,
         'group_hours':group_hours,
@@ -124,7 +126,8 @@ def Pre_Employee_Home(request):
         'next_shift':next_shift,
         'Certifications':Certifications,
         'group_shift':None,
-        'current_shift':current_shift
+        'current_shift':current_shift,
+        'breifs':breifs
     })
 
 @login_required
@@ -213,12 +216,7 @@ def Swap_Accept(request,pk):
         messages.info(request,"thank you , anther employee take this shift before you")
         return redirect("employee:home")
     else:
-        # myshift = EmployeeStatus.objects.get(employee=request.user.employee,day=swap.shift.day)
         mine_in_quearyset = Employee.objects.filter(pk=request.user.employee.pk)
-        # myshift.type=swap.shift.type
-        # myshift.save()
-        # swap.shift.type = 6
-        # swap.shift.save()
         swap.answer=True
         swap.users.set(mine_in_quearyset)
         swap.save()

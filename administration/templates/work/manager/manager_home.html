@@ -92,7 +92,7 @@
                     num[1] = "n"
                 }
   
-                ajax.open("GET", "https://demo-workkk.herokuapp.com/manager/changestatus/"+num[0]+"/"+num[1]+"/"+num[2]+"/"+num[3]);
+                ajax.open("GET", "http://workmanagingsystem.us-east-2.elasticbeanstalk.com/manager/changestatus/"+num[0]+"/"+num[1]+"/"+num[2]+"/"+num[3]);
                 ajax.setRequestHeader("Access-Control-Allow-Origin", "*");
                 ajax.send();
                 ajax.onreadystatechange = () => {

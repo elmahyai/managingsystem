@@ -9,7 +9,8 @@ from administration.forms import ManagerSignUpForm
 from django.http import HttpResponse , JsonResponse
 import calendar ,random
 from datetime import date
-from administration.models import Employee,EmployeeStatus,workHours ,SwapRequest ,Group,GroupStatus,Log,Certification,Employee_Certification
+from administration.models import Employee,EmployeeStatus,workHours ,SwapRequest ,Group,GroupStatus\
+    ,Log,Certification,Employee_Certification,Brief
 from django.contrib import messages
 from django.core.paginator import Paginator
 from administration.utils import set_group_status
@@ -865,13 +866,18 @@ def refuse_certification(request,pk):
 def addbrief(request):
     if request.method == 'POST':
         print(request.POST)
-        select_group_shift = GroupStatus.objects.get(pk=int(request.POST['shift']))
-        if select_group_shift.brief :
-            select_group_shift.brief += " , "
-            select_group_shift.brief += request.POST['Breif']
+        all_Briefs = Brief.objects.filter(shift=int(request.POST['shift']),employee=int(request.POST['employee']))
+        if all_Briefs.count() == 1 :
+            all_Briefs = Brief.objects.get(shift=int(request.POST['shift']), employee=int(request.POST['employee']))
+            all_Briefs.text += " , "
+            all_Briefs.text += request.POST['Breif']
+            all_Briefs.save()
         else:
-            select_group_shift.brief = request.POST['Breif']
-        select_group_shift.save()
+            all_Briefs=Brief()
+            all_Briefs.text = request.POST['Breif']
+            all_Briefs.shift=GroupStatus.objects.get(pk=int(request.POST['shift']))
+            all_Briefs.employee=Employee.objects.get(pk=int(request.POST['employee']))
+            all_Briefs.save()
         return redirect('manager:work_hour_update',request.POST['shift'])
     else:
         return redirect('home')
@@ -895,10 +901,13 @@ def work_hour_update(request,pk):
             'shift': ele,
             'workhour': work_object
         })
+    #get briefs
+    briefs=Brief.objects.filter(shift=pk)
     return render(request, 'work/manager/shiftworks.html', {
         'type': shift,
         'data': data,
-        'group_shift': group_shift
+        'group_shift': group_shift,
+        'briefs':briefs
     })
 
 

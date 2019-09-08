@@ -148,3 +148,10 @@ class Log(models.Model):
     employee = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='logs')
 
 
+
+
+class Brief(models.Model):
+    text=models.TextField(null=True)
+    employee=models.ForeignKey(Employee,on_delete=models.CASCADE,related_name='briefs')
+    shift = models.ForeignKey(GroupStatus,on_delete=models.CASCADE,related_name='braifs')
+

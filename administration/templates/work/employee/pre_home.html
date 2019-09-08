@@ -26,17 +26,19 @@
     {% if live %}
     <h1 class="pg-success form-control text-center h3" style="color:green;">You are live now</h1>
         <hr>
-         {% if group_shift.brief %}
+         {% if breifs|length > 0 %}
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
                             <tr>
                                 <th>Brief From admin</th>
                             </tr>
+							{% for breif  in breifs %}
                                 <tr>
                                     <td>
-                                        {{ group_shift.brief}}
+                                        {{ breif.text }}
                                     </td>
                                 </tr>
+							{% endfor %}
                         </table>
                     </div>
         {% else %}
