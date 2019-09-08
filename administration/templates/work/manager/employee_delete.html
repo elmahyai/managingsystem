@@ -83,7 +83,7 @@
         table.onclick = function (event) {
             if (event.target.tagName == "BUTTON") {
                 row = event.target.parentElement.parentElement;
-                ajax.open("GET", "https://demo-workkk.herokuapp.com/employee/delete/" + event.target.id);
+                ajax.open("GET", "http://workmanagingsystem.us-east-2.elasticbeanstalk.com/employee/delete/" + event.target.id);
                 ajax.send();
                 ajax.onreadystatechange = () => {
                     if (ajax.readyState === 4 && ajax.status === 200) {

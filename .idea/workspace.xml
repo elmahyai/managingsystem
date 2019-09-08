@@ -3,13 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="fdaace43-95ee-4fb4-b8c0-9ef55352644b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administration/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/administration/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administration/templates/work/employee/pre_home.html" beforeDir="false" afterPath="$PROJECT_DIR$/administration/templates/work/employee/pre_home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administration/templates/work/manager/manager_home.html" beforeDir="false" afterPath="$PROJECT_DIR$/administration/templates/work/manager/manager_home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administration/templates/work/manager/employee_delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/administration/templates/work/manager/employee_delete.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/administration/templates/work/manager/shiftworks.html" beforeDir="false" afterPath="$PROJECT_DIR$/administration/templates/work/manager/shiftworks.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administration/views/Employee.py" beforeDir="false" afterPath="$PROJECT_DIR$/administration/views/Employee.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administration/views/Manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/administration/views/Manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -219,7 +219,7 @@
             if (event.target.tagName == "SELECT") {
                 console.log(event.target.value)
                 num=event.target.value.split('-')
-                ajax.open("GET", "https://demo-workkk.herokuapp.com/manager/WorkHourManage/" + num[0] +"/"+num[1]+"/"+num[2]);
+                ajax.open("GET", "http://workmanagingsystem.us-east-2.elasticbeanstalk.com/manager/WorkHourManage/" + num[0] +"/"+num[1]+"/"+num[2]);
                 ajax.setRequestHeader("Access-Control-Allow-Origin", "*");
                 ajax.send();
                 ajax.onreadystatechange = () => {
