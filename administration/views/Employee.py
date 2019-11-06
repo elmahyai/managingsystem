@@ -111,9 +111,6 @@ def Pre_Employee_Home(request):
     current_shift = GroupStatus.objects.filter(day=day, type=int(shift))
     # get breifs
     breifs = Brief.objects.filter(employee=request.user.employee , shift=current_shift[0])
-    print("================")
-    print(breifs.count())
-    print("================")
     return render(request,'work/employee/pre_home.html',{
        'employees_num': employees_num,
         'group_hours':group_hours,
@@ -145,9 +142,7 @@ def Employee_Home(request):
             emp_type = EmployeeStatus.objects.create(employee=request.user.employee, day=day)
         else:
             # get the object belong to this employee
-            print("pppppppppppppppppppp")
             emp_type = EmployeeStatus.objects.get(employee=request.user.employee, day=day)
-            print(emp_type)
         data.append({
             'day': day,
             'day_types': emp_type
@@ -244,10 +239,7 @@ def delete(request, pk):
 @login_required
 @employee_required
 def sendlog(request):
-    print("===============log===============")
     if request.method == 'POST':
-        print("===============log2===============")
-        print(request.POST)
         if request.POST['log'] == "":
             messages.warning(request, "sorry , there is no message to send!!")
         else:
@@ -310,7 +302,6 @@ def showlog(request):
             level=request.user.employee.level,
             shift=2
         )
-    print(logs)
     return render(request,'work/employee/showlogs.html',{
         "logs":logs
     })
@@ -320,14 +311,12 @@ def showlog(request):
 @employee_required
 def certification(request):
     if request.method == 'POST':
-        print(request.POST)
         if int(request.POST['years']) not in [1, 2, 3, 4, 5]:
             messages.warning(request, "years must between 1, 5 !!")
         else:
             # start here
             day_pattern = request.POST['start_date'].split('-')
             day = date(int(day_pattern[0]), int(day_pattern[1]), int(day_pattern[2]))
-            print(day)
             certification = Certification.objects.get(pk=request.POST['certification'])
             if Employee_Certification.objects.filter(employee=request.user.employee, certification=certification) \
                     .count() == 0:

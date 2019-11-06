@@ -70,18 +70,13 @@ def Pre_Manager_Home(request):
         Employee.objects.filter(level=4).count(),
         Employee.objects.filter(level=5).count(),
     ]
-    print("=====================done===========")
-    print(employees_num)
     swaps = SwapRequest.objects.filter(admin_request=False, answer=True)
-    print('====================')
-    print(swaps)
     # get certifctions need to teel admin
     certifications = Employee_Certification.objects.all()
     certifications_after = []
     # for certification in certifications:
     for cert in certifications:
         end_date = cert.start_date + datetime.timedelta(days=365 * cert.years)
-        print()
         day_remind = end_date - date.today()
         if day_remind.days in range(-30, 31):
             certifications_after.append({
@@ -179,11 +174,7 @@ def Manager_Home(request, num):
     # first get all groups
         groups=Group.objects.all()
         month_range = calendar.monthrange(year, month)
-        print(month_range)
         for i in range(month_range[1]):
-            print("********")
-        for i in range(month_range[1]):
-            print("-------------")
             day = date(year, month, i + 1)
             # add this day to those month days
             days.append(day)
@@ -208,7 +199,6 @@ def Manager_Home(request, num):
                         day_types[4] = group_type
                     # elif group_type.type == 6:
                     #     day_types[5] = group_type
-            print("000000000000")
             data.append({
                             'day': day,
                             'day_types': day_types
@@ -221,12 +211,10 @@ def Manager_Home(request, num):
                 None,
                 None,
             ]
-        print(data)
         # paginator = Paginator(data, 7)  # Show 10 Question per page
         # page = request.GET.get('page')
         # data = paginator.get_page(page)
 
-        print("=========================")
         return render(request, 'work/manager/manager_home.html', {
                 'days': days,
                 'data': data,
@@ -322,14 +310,12 @@ def Change_Status(request,type_num,status_pk,shift_type,day):
 
     # check if the request is not valid the same thing inthe datebase
     if not temp_group and not temp_shift:
-        print("333333333333")
         return JsonResponse({
             "success":True,
             "tr_number" : tr_number,
             "group" : group_name
         },status=200)
     elif temp_shift and temp_shift.group == temp_group:
-        print("herrrrrrrrr")
         return JsonResponse({
             "success": True,
             "tr_number" : tr_number,
@@ -343,12 +329,9 @@ def Change_Status(request,type_num,status_pk,shift_type,day):
         elif not temp_shift:
             temp_shift=GroupStatus.objects.get(day=temp_day,group=temp_group)
             tr_number=temp_shift.type
-            print(temp_shift ,temp_group , temp_shift.group)
             temp_shift.type = shift_type
             temp_shift.save()
-            print("h888888888")
-            print("=====================")
-            print(temp_day)
+         
             set_group_status(temp_shift,shift_type)
         else:
             # two way shift
@@ -356,7 +339,6 @@ def Change_Status(request,type_num,status_pk,shift_type,day):
                 temp_shift.group = temp_group
                 temp_shift.save()
                 set_group_status(temp_shift,temp_shift.type)
-                print("666666666666666666")
             else:
                 anther_shift = GroupStatus.objects.get(group=temp_group,day=temp_day)
                 tr_number=anther_shift.type
@@ -367,7 +349,6 @@ def Change_Status(request,type_num,status_pk,shift_type,day):
                 set_group_status(temp_shift,temp_shift.type)
                 anther_shift.save()
                 temp_shift.save()
-                print("4444444444444444")
 
     return JsonResponse({
         "success": True,
@@ -382,8 +363,6 @@ def Change_Status(request,type_num,status_pk,shift_type,day):
 @manager_required
 def Work_Hours_show(request):
     if request.method == 'POST':
-        print('====================')
-        print(request.POST)
         if not request.POST['date']:
             messages.error(request,"must select date")
             return redirect('manager:home_to',2)
@@ -432,7 +411,6 @@ def Work_Hours_manage(request,hour_num,hour_type,work_pk):
     #     not valid
         return JsonResponse({'success':False},status=200)
     elif breakNum == 0 and hour_type ==1 :
-        print("noooooooooooooooooo")
         return JsonResponse({'success':True},status=200)
     if hour_type == 0:
         if hour_num == 1:
@@ -581,7 +559,6 @@ def get_work_hour(emp:Employee,year:int,month:int):
     work_days = 0
     swap_num = 0
     for ele in data :
-        print("++++++++++++++++++++++++++m",ele)
         temp=ele['shift']
         if not hasattr(temp, 'workhours'):
             workHours.objects.create(status=temp)
@@ -597,11 +574,9 @@ def get_work_hour(emp:Employee,year:int,month:int):
                 breaks =breaks + 2
 
         if SwapRequest.objects.filter(owner=emp , shift=temp , admin_answer = True).count() != 0:
-                print("::::::::::::::::::::::::::::::::::")
                 swap_num=swap_num+1
 
 
-    print(":::::::::::::::::::::::::",swap_num)
     return [num,breaks,work_days,swap_num]
 
 
@@ -640,7 +615,6 @@ def Swap_Refuse(request, pk):
 def delete_show(request):
     employees=Employee.objects.all()
     groups=Group.objects.all()
-    print(groups)
     return render(request,'work/manager/employee_delete.html',{
         'employees':employees,
         'groups':groups
@@ -650,7 +624,6 @@ def delete_show(request):
 @manager_required
 def addgroup(request):
     if request.method == 'POST':
-        print(request.POST)
         if Group.objects.filter(name=request.POST['name']).count() != 0:
             messages.error(request,"please enter anther name !!")
         else:
@@ -664,7 +637,6 @@ def addgroup(request):
 @manager_required
 def add_Certification(request):
     if request.method == 'POST':
-        print(request.POST)
         if Certification.objects.filter(name=request.POST['name']).count() != 0:
             messages.error(request,"sorry , there ia anther certification with the same name")
         else:
@@ -678,7 +650,6 @@ def add_Certification(request):
 @manager_required
 def employee_certification(request,pk):
     if request.method == 'POST':
-        print(request.POST)
         if int(request.POST['years']) not in [1,2,3,4,5]:
             messages.warning(request,"years must between 1, 5 !!")
         else:
@@ -687,7 +658,6 @@ def employee_certification(request,pk):
 
             employee = Employee.objects.get(id=request.POST['pk'])
             day=date(int(day_pattern[0]),int(day_pattern[1]),int(day_pattern[2]))
-            print(day)
             certification = Certification.objects.get(pk=request.POST['certification'])
             if Employee_Certification.objects.filter(employee=employee,certification=certification)\
                     .count() == 0:
@@ -738,8 +708,7 @@ def set_shifts(request):
         for i in [1,2,3,4]:
             done=None
             while not done :
-                print(done)
-                print("===helllo====")
+        
                 group = random.choice(temp_groups)
                 if GroupStatus.objects.filter(group=group, day=day).count() == 0:
                     # create new shift to this group
@@ -748,7 +717,6 @@ def set_shifts(request):
                     group_type = GroupStatus.objects.get(group=group, day=day)
                 if i == 1:
                     if group.morring < 10 and  group.all < 24:
-                        print("============1")
                         group.morring += 1
                         group.all += 1
                         group_type.type = i
@@ -760,7 +728,6 @@ def set_shifts(request):
                         done = None
                 elif i == 2:
                     if group.afternoon < 10 and  group.all < 24:
-                        print("======2")
                         group.afternoon += 1
                         group.all += 1
                         group_type.type = i
@@ -772,7 +739,6 @@ def set_shifts(request):
                         done = None
                 elif i == 3 :
                     if group.evening < 10 and  group.all < 24:
-                        print("=======3")
                         group.evening += 1
                         group.all += 1
                         group_type.type = i
@@ -809,7 +775,6 @@ def set_shifts(request):
           +'group D { morring : '+ str(groups[3].morring*8) + ' , afternoon : '+ str(groups[3].afternoon*8) + ' , evening : '+ str(groups[3].evening*8) +' , ALL : '+ str(groups[3].all*8) + '}'\
           +'group F { morring : '+ str(groups[4].morring*8) + ' , afternoon : '+ str(groups[4].afternoon*8) + ' , evening : '+ str(groups[4].evening*8) +' , ALL : '+ str(groups[4].all*8) + '}'\
 
-    print(msg)
     # done
     messages.success(request,msg)
     return redirect('manager:home_to' , 1)
@@ -820,11 +785,8 @@ def set_shifts(request):
 @manager_required
 def filter_employees(request):
     if request.method == 'POST':
-        print('=============================')
-        print(request.POST)
         employees = Group.objects.get(pk=request.POST['group']).employees.all()
         groups = Group.objects.all()
-        print(groups)
         return render(request, 'work/manager/employee_delete.html', {
             'employees': employees,
             'groups': groups
@@ -842,7 +804,6 @@ def accept_certification(request,pk):
     else:
         select_emp_cert.admin_accept = True
     select_emp_cert.save()
-    print('=======accept======')
     return redirect('home')
 
 
@@ -857,7 +818,6 @@ def refuse_certification(request,pk):
         select_emp_cert.save()
     else:
         select_emp_cert.delete()
-    print('======refuse=======')
     return redirect('home')
 
 
@@ -865,7 +825,6 @@ def refuse_certification(request,pk):
 @manager_required
 def addbrief(request):
     if request.method == 'POST':
-        print(request.POST)
         all_Briefs = Brief.objects.filter(shift=int(request.POST['shift']),employee=int(request.POST['employee']))
         if all_Briefs.count() == 1 :
             all_Briefs = Brief.objects.get(shift=int(request.POST['shift']), employee=int(request.POST['employee']))

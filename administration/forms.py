@@ -48,7 +48,6 @@ class EmployeeSignupForm(UserCreationForm):
         user = super().save(commit=False)
         user.is_empolyee = True
         user.save()
-        print("=========================",self.cleaned_data.get('Level'))
         employee = Employee.objects.create(
             user=user,
             level=self.cleaned_data.get('Level'),

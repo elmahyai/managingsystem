@@ -27,7 +27,6 @@ SECRET_KEY = 'y8^za_j&)$s)$c%h1kcluy_%-r3%%%_ihptr22=q=tw(d3+0f1'
 # SECURITY WARNING: keep the secret key used in production secret!
 
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 #
@@ -115,6 +114,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'OPTIONS': {
+        'timeout': 20,
     }
 }
 # from decouple import config
@@ -148,7 +150,7 @@ DATABASES = {
 #     },
 # ]
 
-AUTH_PASSWORD_VALIDATORS=[]
+AUTH_PASSWORD_VALIDATORS = []
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -168,7 +170,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 
 # Custom Django auth settings
@@ -220,9 +221,9 @@ STATICFILES_DIRS = (
 #     'whitenoise.middleware.WhiteNoiseMiddleware')
 
 MIDDLEWARE_CLASSES = [
-# 'django.middleware.security.SecurityMiddleware',
-'whitenoise.middleware.WhiteNoiseMiddleware',
-#...
+    # 'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # ...
 ]
 
 
