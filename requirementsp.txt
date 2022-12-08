@@ -31,7 +31,7 @@ attrs==18.2.0
 autobahn==18.10.1
 Automat==0.7.0
 backcall==0.1.0
-certifi==2018.10.15
+certifi==2022.12.7
 channels==2.1.5
 whitenoise==3.3.1
 channels-redis==2.3.1
